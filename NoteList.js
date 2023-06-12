@@ -3,13 +3,15 @@ import { Note } from './Note.js';
 export class NoteList {
   _notes = [];
   _key = null;
+  _def = [];
 
-  constructor(container, key = null) {
+  constructor(container, key = null, def = []) {
     this.container = container;
     this.list = document.createElement('div');
     this.list.classList.add('list-group');
 
     this._key = key;
+    this._def = def;
 
     this.update();
 
@@ -83,21 +85,21 @@ export class NoteList {
           name: note.name,
           done: note.done,
         });
-
-        localStorage.setItem(this._key, JSON.stringify(saveList));
       }
+      localStorage.setItem(this._key, JSON.stringify(saveList));
     }
   }
 
   update() {
-    this.startList = [];
+    this.startList = this._def;
 
-    this._note = [];
+    console.log(this.def);
+    this._notes = [];
     this.list.innerHTML = '';
 
     if (this._key) {
       let dataLS = localStorage.getItem(this._key);
-      if ((dataLS !== '') & (dataLS !== null)) {
+      if (dataLS !== '' && dataLS !== null) {
         this.startList = JSON.parse(dataLS);
       }
     }
@@ -112,7 +114,7 @@ export class NoteList {
         this._notes.push(newNote);
       }
     }
-
+    this.save();
     this.checkEmpty();
   }
 }

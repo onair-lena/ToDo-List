@@ -93,7 +93,6 @@ export class NoteList {
   update() {
     this.startList = this._def;
 
-    console.log(this.def);
     this._notes = [];
     this.list.innerHTML = '';
 

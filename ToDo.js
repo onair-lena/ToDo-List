@@ -1,5 +1,6 @@
 import { Note } from './Note.js';
 import { NoteList } from './NoteList.js';
+import { AddButton } from './AddButton.js';
 
 export class ToDo {
   _notes = null;
@@ -13,6 +14,7 @@ export class ToDo {
     currentDef = []
   ) {
     this.container = container;
+    this.navWrapper = document.createElement('div');
 
     this.nav = document.createElement('nav');
     this.title = document.createElement('h2');
@@ -23,7 +25,8 @@ export class ToDo {
     this.list = document.createElement('div');
 
     this.container.classList.add('pt-5', 'pb-5');
-    this.nav.classList.add('mb-5', 'btn-group');
+    this.navWrapper.classList.add('mb-5');
+    this.nav.classList.add('btn-group');
     this.form.classList.add('input-group', 'mb-3');
     this.input.classList.add('form-control');
     this.input.placeholder = 'Write a name of a new task';
@@ -35,7 +38,9 @@ export class ToDo {
     this.buttonWrapper.append(this.button);
     this.form.append(this.input);
     this.form.append(this.buttonWrapper);
-    this.container.append(this.nav);
+    this.container.append(this.navWrapper);
+
+    this.navWrapper.append(this.nav);
     this.container.append(this.title);
     this.container.append(this.form);
     this.container.append(this.list);
@@ -47,7 +52,7 @@ export class ToDo {
       }
     });
 
-    this.addUser(currentTitle, currentKey, currentDef);
+    this.addList(currentTitle, currentKey, currentDef);
     this.currentUser = currentKey;
 
     this.form.addEventListener('submit', (e) => {
@@ -62,6 +67,8 @@ export class ToDo {
       this.button.disabled = true;
       this.input.value = '';
     });
+
+    new AddButton(this);
   }
 
   set currentUser(value) {
@@ -87,7 +94,7 @@ export class ToDo {
     return this._currentUser;
   }
 
-  addUser(title, key, def = []) {
+  addList(title, key, def = []) {
     let button = document.createElement('button');
     button.classList.add('btn', 'btn-outline-primary');
     button.type = 'button';

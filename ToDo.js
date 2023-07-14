@@ -4,7 +4,7 @@ import { AddButton } from './AddButton.js';
 
 export class ToDo {
   _notes = null;
-  _currentUser = 'todo';
+  _currentList = 'todo';
   _users = [];
 
   constructor(
@@ -53,7 +53,7 @@ export class ToDo {
     });
 
     this.addList(currentTitle, currentKey, currentDef);
-    this.currentUser = currentKey;
+    this.currentList = currentKey;
 
     this.form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -71,27 +71,27 @@ export class ToDo {
     new AddButton(this);
   }
 
-  set currentUser(value) {
-    this._currentUser = value;
+  set currentList(value) {
+    this._currentList = value;
 
-    let currentUser = null;
+    let currentList = null;
 
     for (const user of this._users) {
       if (user.key === value) {
-        currentUser = user;
+        currentList = user;
         user.button.classList.add('active');
       } else {
         user.button.classList.remove('active');
       }
     }
 
-    this.title.textContent = currentUser.title;
+    this.title.textContent = currentList.title;
 
-    this._notes = new NoteList(this.list, value, currentUser.def);
+    this._notes = new NoteList(this.list, value, currentList.def);
   }
 
-  get currentUser() {
-    return this._currentUser;
+  get currentList() {
+    return this._currentList;
   }
 
   addList(title, key, def = []) {
@@ -101,7 +101,7 @@ export class ToDo {
     button.textContent = title;
 
     button.addEventListener('click', () => {
-      this.currentUser = key;
+      this.currentList = key;
     });
 
     this._users.push({
@@ -126,8 +126,8 @@ export class ToDo {
       }
     }
 
-    if (this.currentUser === key) {
-      this, (this.currentUser = this._users[0].key);
+    if (this.currentList === key) {
+      this, (this.currentList = this._users[0].key);
     }
   }
 }

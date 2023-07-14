@@ -8,7 +8,8 @@ export class AddButton {
     container.navWrapper.append(this.addButton);
 
     this.addButton.addEventListener('click', () => {
-      container.addList(prompt('Add list title'));
+      const title = prompt('Add list title');
+      container.addList(title, title.replaceAll(' ', '_'));
     });
   }
 }

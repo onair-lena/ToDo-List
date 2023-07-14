@@ -52,7 +52,16 @@ export class ToDo {
       }
     });
 
-    this.addList(currentTitle, currentKey, currentDef);
+    const listsLS = Object.keys(localStorage);
+    if (listsLS.length === 0) {
+      this.addList(currentTitle, currentKey, currentDef);
+    } else {
+      for (let key of listsLS) {
+        console.log(key);
+        this.addList(key.replaceAll('_', ' '), key, currentDef);
+      }
+    }
+
     this.currentList = currentKey;
 
     this.form.addEventListener('submit', (e) => {
@@ -84,7 +93,7 @@ export class ToDo {
         user.button.classList.remove('active');
       }
     }
-
+    console.log(currentList);
     this.title.textContent = currentList.title;
 
     this._notes = new NoteList(this.list, value, currentList.def);
@@ -93,6 +102,8 @@ export class ToDo {
   get currentList() {
     return this._currentList;
   }
+
+  update() {}
 
   addList(title, key, def = []) {
     let button = document.createElement('button');

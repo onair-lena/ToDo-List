@@ -1,3 +1,4 @@
+import { DeleteButton } from './DeleteButton.js';
 import { Note } from './Note.js';
 
 export class NoteList {

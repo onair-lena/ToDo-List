@@ -1,15 +1,16 @@
 import { Note } from './Note.js';
 import { NoteList } from './NoteList.js';
 import { AddButton } from './AddButton.js';
+import { DeleteButton } from './DeleteButton.js';
 
 export class ToDo {
   _notes = null;
   _currentList = 'todo';
-  _users = [];
+  _lists = [];
 
   constructor(
     container,
-    currentTitle = 'ToDo List',
+    currentTitle = 'ToDo',
     currentKey = 'todo',
     currentDef = []
   ) {
@@ -17,6 +18,7 @@ export class ToDo {
     this.navWrapper = document.createElement('div');
 
     this.nav = document.createElement('nav');
+    this.titleWrapper = document.createElement('div');
     this.title = document.createElement('h2');
     this.form = document.createElement('form');
     this.input = document.createElement('input');
@@ -26,6 +28,7 @@ export class ToDo {
 
     this.container.classList.add('pt-5', 'pb-5');
     this.navWrapper.classList.add('mb-5');
+    this.titleWrapper.classList.add('d-flex');
     this.nav.classList.add('btn-group');
     this.form.classList.add('input-group', 'mb-3');
     this.input.classList.add('form-control');
@@ -41,7 +44,8 @@ export class ToDo {
     this.container.append(this.navWrapper);
 
     this.navWrapper.append(this.nav);
-    this.container.append(this.title);
+    this.container.append(this.titleWrapper);
+    this.titleWrapper.append(this.title);
     this.container.append(this.form);
     this.container.append(this.list);
 
@@ -57,8 +61,11 @@ export class ToDo {
       this.addList(currentTitle, currentKey, currentDef);
     } else {
       for (let key of listsLS) {
-        console.log(key);
-        this.addList(key.replaceAll('_', ' '), key, currentDef);
+        const title = (key.slice(0, 1).toUpperCase() + key.slice(1)).replaceAll(
+          '_',
+          ' '
+        );
+        this.addList(title, key, currentDef);
       }
     }
 
@@ -78,6 +85,7 @@ export class ToDo {
     });
 
     new AddButton(this);
+    new DeleteButton(this);
   }
 
   set currentList(value) {
@@ -85,15 +93,15 @@ export class ToDo {
 
     let currentList = null;
 
-    for (const user of this._users) {
-      if (user.key === value) {
-        currentList = user;
-        user.button.classList.add('active');
+    for (const list of this._lists) {
+      if (list.key === value) {
+        currentList = list;
+        list.button.classList.add('active');
       } else {
-        user.button.classList.remove('active');
+        list.button.classList.remove('active');
       }
     }
-    console.log(currentList);
+
     this.title.textContent = currentList.title;
 
     this._notes = new NoteList(this.list, value, currentList.def);
@@ -102,8 +110,6 @@ export class ToDo {
   get currentList() {
     return this._currentList;
   }
-
-  update() {}
 
   addList(title, key, def = []) {
     let button = document.createElement('button');
@@ -115,7 +121,7 @@ export class ToDo {
       this.currentList = key;
     });
 
-    this._users.push({
+    this._lists.push({
       title,
       key,
       def,
@@ -125,20 +131,20 @@ export class ToDo {
     this.nav.append(button);
   }
 
-  removeUser(key) {
-    if (this._users.length <= 1) {
+  removeList(key) {
+    if (this._lists.length <= 1) {
       return;
     }
 
-    for (let i = 0; i < this._users.length; i++) {
-      if (this._users[i].key === key) {
-        this._users[i].button.remove();
-        this._users.splice(i, 1);
+    for (let i = 0; i < this._lists.length; i++) {
+      if (this._lists[i].key === key) {
+        this._lists[i].button.remove();
+        this._lists.splice(i, 1);
       }
     }
 
     if (this.currentList === key) {
-      this, (this.currentList = this._users[0].key);
+      this, (this.currentList = this._lists[0].key);
     }
   }
 }
